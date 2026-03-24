@@ -1,51 +1,85 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, FlatList, StyleSheet, Image } from "react-native";
+import { View, Text, TextInput, Button, FlatList, StyleSheet, Image, Modal } from "react-native";
 import Item from "../models/Item";
 import useItemViewModel from "../viewmodels/ItemViewModel";
 
 export default function ItemView() {
 
-  const { itens, adicionarItem, removerItem, confirmarRemocao } = useItemViewModel();
+  const { itens, adicionarItem, confirmarRemocao } = useItemViewModel();
 
   const [nome, setNome] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
   const [imagem, setImagem] = useState<string>("");
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <View style={styles.container}>
 
       <Text style={styles.titulo}>Catálogo de Itens</Text>
 
-      <TextInput
-        placeholder="Nome do item"
-        value={nome}
-        onChangeText={setNome}
-        style={styles.input}
-      />
-
-      <TextInput
-        placeholder="Descrição"
-        value={desc}
-        onChangeText={setDesc}
-        style={styles.input}
-      />
-
-      <TextInput
-        placeholder="URL da imagem"
-        value={imagem}
-        onChangeText={setImagem}
-        style={styles.input}
-      />
-
       <Button
-        title="Adicionar"
-        onPress={() => {
-          adicionarItem(nome, desc, imagem);
-          setNome("");
-          setDesc("");
-          setImagem("");
-        }}
+        title="Adicionar Item"
+        onPress={() => setModalVisible(true)}
       />
+
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        transparent={true}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+
+            <Text style={styles.titulo}>Novo Item</Text>
+
+            <TextInput
+              placeholder="Nome do item"
+              value={nome}
+              onChangeText={setNome}
+              style={styles.input}
+            />
+
+            <TextInput
+              placeholder="Descrição"
+              value={desc}
+              onChangeText={setDesc}
+              style={styles.input}
+            />
+
+            <TextInput
+              placeholder="URL da imagem"
+              value={imagem}
+              onChangeText={setImagem}
+              style={styles.input}
+            />
+
+            <View style={styles.botoesModal}>
+
+              <Button
+                title="Cancelar"
+                color="gray"
+                onPress={() => {
+                  setModalVisible(false);
+                }}
+              />
+
+              <Button
+                title="Adicionar"
+                onPress={() => {
+                  adicionarItem(nome, desc, imagem);
+                  setNome("");
+                  setDesc("");
+                  setImagem("");
+                  setModalVisible(false);
+                }}
+              />
+
+            </View>
+
+          </View>
+        </View>
+      </Modal>
 
       <FlatList
         data={itens}
@@ -85,7 +119,7 @@ const styles = StyleSheet.create({
   },
 
   titulo: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "bold",
     marginBottom: 20,
     color: "#000",
@@ -131,5 +165,25 @@ const styles = StyleSheet.create({
     color: "#000",
     marginBottom: 4,
   },
+
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  modalContent: {
+    width: "90%",
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 20,
+  },
+
+  botoesModal: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10
+  }
 
 });
