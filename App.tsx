@@ -1,16 +1,15 @@
 import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import ItemView from "./views/ItemView";
+import { NavigationContainer } from "@react-navigation/native";
+import Navigator from "./navigation/Navigator";
+import useItemViewModel from "./viewmodels/ItemViewModel";
 
 export default function App() {
 
-  return (
-    <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 }}>
-        <ItemView />
-      </SafeAreaView>
-    </SafeAreaProvider>
-  );
+  const viewModel = useItemViewModel();
 
+  return (
+    <NavigationContainer>
+      <Navigator viewModel={viewModel} />
+    </NavigationContainer>
+  );
 }
